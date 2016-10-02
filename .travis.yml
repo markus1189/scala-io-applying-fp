@@ -1,0 +1,4 @@
+language:
+  nix
+script:
+  nix-shell --command "latexmk -pdf tex/applying-fp.tex"
