@@ -1,4 +1,4 @@
 language:
   nix
 script:
-  nix-shell --pure --command "runhaskell Build.hs"
+  ./build.sh
