@@ -4,6 +4,8 @@ let
   hsPkgs = ps: with ps; [
     containers
     aeson
+    shake
+    turtle
   ];
 in
 stdenv.mkDerivation {
@@ -30,6 +32,5 @@ stdenv.mkDerivation {
       zathura
   ] ++ (with haskellPackages; [
     (ghcWithPackages hsPkgs)
-    shake
   ]);
 }
