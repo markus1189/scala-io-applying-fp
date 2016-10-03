@@ -1,6 +1,6 @@
 \documentclass{beamer}
 
-\usepackage{pgf}
+\usepackage{minted}
 
 \title{Applying FP Patterns}
 \subtitle{Or: Why should I care about FP}
@@ -8,7 +8,7 @@
 \date{Scala.IO, 2016}
 \subject{Computer Science}
 
-\input{./beamer-setup}
+% \input{./beamer-setup}
 
 \begin{document}
 \frame{\titlepage}
@@ -29,11 +29,58 @@
   \framesubtitle{subtitle on second slide}
 \end{frame}
 
-
 \section{Monoids}
 \label{sec:monoids}
 
+\begin{frame}
+  \frametitle{Lego vs Duplo}
+  FP = Lego, OO = Duplo?
+\end{frame}
+
+\begin{frame}
+  \frametitle{Monoids}
+
+\end{frame}
+
 \section{Error Handling}
 \label{sec:error-handling}
+
+\begin{frame}
+  \frametitle{Traditional Way: Java}
+  \begin{itemize}
+  \item in Java: \texttt{try}/\texttt{catch}/\texttt{finally}
+  \item \textit{checked} exceptions
+    \begin{itemize}
+    \item compiler help
+    \item reduce return value checking
+    \end{itemize}
+  \item \textit{unchecked} exceptions
+    \begin{itemize}
+    \item only visible via docs, if documented at all
+    \item currently the only way to go in Java
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{From Java To Scala}
+  \begin{itemize}
+  \item Scala: only \textit{unchecked} exceptions
+  \item but: \texttt{throw} and \texttt{catch} discouraged in FP
+  \item throwing exceptions = effect $\rightarrow$ track via \textbf{types}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Standard Scala}
+  \begin{itemize}
+  \item Scala provides some means for this out of the box
+  \item \texttt{Either} / \texttt{Try}
+  \end{itemize}
+  \begin{minted}{scala}
+    val either = Right(1)
+  \end{minted}
+
+\end{frame}
 
 \end{document}

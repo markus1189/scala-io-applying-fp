@@ -7,30 +7,44 @@ let
     shake
     turtle
   ];
+  tex = texlive.combine {
+    inherit (texlive)
+    babel
+    beamer
+    # calc
+    chngcntr
+    cleveref
+    enumitem
+    etoolbox
+    excludeonly
+    fancyvrb
+    float
+    framed
+    # fvextra
+    ifplatform
+    # ifthen
+    # keyval
+    # kvoptions
+    lineno
+    listings
+    microtype
+    minted
+    # pdftexcmds
+    scheme-medium
+    todonotes
+    upquote
+    xcolor
+    xstring;
+  };
 in
 stdenv.mkDerivation {
   name = "applying-fp-patterns";
   buildInputs = [
-    fasd
-    (texlive.combine {
-        inherit (texlive)
-        scheme-medium
-        beamer
-        listings
-        minted
-        cleveref
-        microtype
-        babel
-        todonotes
-        chngcntr
-        excludeonly
-        upquote
-        ifplatform
-        xstring
-        enumitem;
-      })
-      zathura
+    tex
+    which
   ] ++ (with haskellPackages; [
     (ghcWithPackages hsPkgs)
+  ]) ++ (with pythonPackages; [
+    pygments
   ]);
 }
