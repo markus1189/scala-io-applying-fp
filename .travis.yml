@@ -1,4 +1,4 @@
 language:
   nix
 script:
-  nix-shell --pure --command "cd tex; latexmk -pdf applying-fp.tex"
+  nix-shell --pure --command "runhaskell Build.hs"

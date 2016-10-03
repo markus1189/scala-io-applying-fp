@@ -9,10 +9,16 @@ import qualified Data.Text as T
 
 main :: IO ()
 main = shakeArgs shakeOptions $ do
-    want [ "applying-fp.pdf" ]
+    want [ "tex" </> "applying-fp.pdf" ]
 
-    "*.pdf" %> \out -> do
-      need ["tex" </> out -<.> "tex"]
+    "//*.pdf" %> \out -> do
+      let inp = out -<.> "tex"
+      need [inp]
       void $ do
-        cd "tex"
-        shell ("latexmk -pdf " <> T.pack out) empty
+        let dir = fromString (takeDirectory inp) :: Turtle.FilePath
+        echo (T.pack $ takeDirectory inp)
+        cd dir
+        dir <- pwd
+        echo (format fp dir)
+        shell ("latexmk -pdf " <> T.pack (takeFileName inp)) empty
+        cd ".."
