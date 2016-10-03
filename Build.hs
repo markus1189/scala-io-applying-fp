@@ -7,6 +7,9 @@ import Development.Shake.FilePath
 import Development.Shake.Util
 import qualified Data.Text as T
 
+
+latexmk file = shell ("latexmk -shell-escape -pdf " <> file) empty
+
 withCwd :: MonadIO m => Turtle.FilePath -> m a -> m a
 withCwd dir act = do
   cwd <- pwd
@@ -23,5 +26,4 @@ main = shakeArgs shakeOptions $ do
       let inp = out -<.> "tex"
           dir = fromString (takeDirectory inp)
       need [inp]
-      void . withCwd dir $ do
-        shell ("latexmk -pdf " <> T.pack (takeFileName inp)) empty
+      void $ withCwd dir $ latexmk (T.pack (takeFileName inp))
