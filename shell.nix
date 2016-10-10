@@ -6,6 +6,7 @@ let
     aeson
     shake
     turtle
+    HaTeX
   ];
   tex = texlive.combine {
     inherit (texlive)
@@ -29,6 +30,8 @@ let
     listings
     microtype
     minted
+    pgf
+
     # pdftexcmds
     scheme-medium
     todonotes
