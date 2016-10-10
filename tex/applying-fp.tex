@@ -1,6 +1,7 @@
 \documentclass{beamer}
 
 \usepackage{minted}
+\usepackage{pgf}
 
 \title{Applying FP Patterns}
 \subtitle{Or: Why should I care about FP}
@@ -8,7 +9,7 @@
 \date{Scala.IO, 2016}
 \subject{Computer Science}
 
-% \input{./beamer-setup}
+\input{./beamer-setup}
 
 \begin{document}
 \frame{\titlepage}
@@ -76,11 +77,52 @@
   \begin{itemize}
   \item Scala provides some means for this out of the box
   \item \texttt{Either} / \texttt{Try}
+  \item both have their share of problems
+  \item you don't want \texttt{Try}, though
+  \item nice: \texttt{Either} will be right-biased in 2.12
+  \item use FP library, cats, scalaz, \dots
   \end{itemize}
-  \begin{minted}{scala}
-    val either = Right(1)
-  \end{minted}
+\end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{Example Time}
+  \begin{itemize}
+  \item password validation
+  \item we require some constraints
+    \begin{itemize}
+    \item length >= 10
+    \item contains at least one number
+    \item contains at least one special char
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Representing Errors (Java)}
+\begin{minted}{java}
+class 
+\end{minted}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Validation}
+  \begin{itemize}
+  \item example: password input
+  \item fail 1: too short
+  \item fail 2: no numbers
+  \item fail 3: no special chars
+  \item raaaaage because of sequential errors
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Ior (cats) and \textbackslash{}\&/ (scalaz)}
+  \begin{itemize}
+  \item what about ``non-fatal'' exceptions
+  \item instead of short circuiting, continue with warning
+  \item there might still be fatal situations with short circuiting
+  \item solution: \mintinline{scala}{Ior} and \mintinline{scala}{\&/}
+  \end{itemize}
 \end{frame}
 
 \end{document}
