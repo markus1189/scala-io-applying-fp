@@ -1,3 +1,3 @@
-package de.codecentric.applyingfp.errorhandling;
+package de.codecentric.applyingfp.errorhandling.java;
 
 public class PasswordContainsNoDigitsException extends LoginGuardException {}

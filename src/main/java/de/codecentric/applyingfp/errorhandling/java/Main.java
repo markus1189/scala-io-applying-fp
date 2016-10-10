@@ -1,10 +1,10 @@
-package de.codecentric.applyingfp.errorhandling;
+package de.codecentric.applyingfp.errorhandling.java;
 
 public class Main {
     public static void main(String[] args) {
         LoginGuard guard = new LoginGuard();
         try {
-            
+
             guard.login("joe");
             guard.login("joesmith");
             guard.login("joesmith1");
