@@ -1,23 +1,22 @@
 \useinnertheme{default}
 
-\definecolor{Zeus}{RGB}{60,59,55}
 \definecolor{MidnightBlue}{RGB}{68,72,169}
 \definecolor{Supernova}{RGB}{227,158,0}
 \definecolor{MediumSpringGreen}{RGB}{0, 227, 158}
 \definecolor{Purple}{RGB}{158,0,227}
-\definecolor{DarkOrange}{RGB}{227,101,0}
+\definecolor{ScalaIO}{RGB}{187,0,39}
 
 \definecolor{shadecolor}{RGB}{227,158,0}
 
-\usecolortheme[named=DarkOrange]{structure}
+\usecolortheme[named=ScalaIO]{structure}
 
-\setbeamercolor{my header}{fg=DarkOrange,bg=Zeus}
-\setbeamercolor{my footer}{fg=DarkOrange!90,bg=Zeus}
-\setbeamercolor{my footer 2}{fg=DarkOrange!90,bg=Zeus!90}
-\setbeamercolor{my page number}{fg=black,bg=DarkOrange!90}
+\setbeamercolor{my header}{fg=ScalaIO,bg=black}
+\setbeamercolor{my footer}{fg=ScalaIO!90,bg=black}
+\setbeamercolor{my footer 2}{fg=ScalaIO!90,bg=black!90}
+\setbeamercolor{my page number}{fg=black,bg=ScalaIO!90}
 
 \setbeamercolor{section in head/foot}{fg=white}
-\setbeamercolor{mini frame}{fg=DarkOrange}
+\setbeamercolor{mini frame}{fg=ScalaIO}
 
 \setbeamertemplate{headline}{%
   \begin{beamercolorbox}[wd=\paperwidth,ht=5ex,dp=5ex]{my header}
@@ -25,12 +24,12 @@
   \end{beamercolorbox}
   \begin{pgfpicture}{0mm}{0mm}{0mm}{0mm}
     \pgfsetlinewidth{0.5mm}
-    \color{DarkOrange}
+    \color{ScalaIO}
     \pgfline{\pgfpoint{0.01\paperwidth}{-1mm}}{\pgfpoint{0.8\paperwidth}{-1mm}}
   \end{pgfpicture}
   \begin{pgfpicture}{0mm}{0mm}{0mm}{0mm}
     \pgfsetlinewidth{0.5mm}
-    \color{DarkOrange}
+    \color{ScalaIO}
     \pgfline{\pgfpoint{0.0025\paperwidth}{-0.76mm}}{\pgfpoint{0.0025\paperwidth}{-0.07\paperwidth}}
   \end{pgfpicture}
 }
@@ -38,7 +37,7 @@
 \setbeamertemplate{footline}{%
   \hbox{%
   \begin{beamercolorbox}[wd=0.55\paperwidth,ht=2.5ex,dp=1ex]{my footer}
-    \hspace{1mm}\insertshortauthor{} - \insertshorttitle{}
+    \hspace{1mm}\insertshortauthor{} - \insertshorttitle{} - codecentric AG
   \end{beamercolorbox}
   \hspace{-2mm}
   \begin{beamercolorbox}[wd=0.40\paperwidth,ht=2.5ex,dp=1ex]{my footer 2}
@@ -51,12 +50,12 @@
 }
   \begin{pgfpicture}{0mm}{0mm}{0mm}{0mm}
     \pgfsetlinewidth{0.5mm}
-    \color{DarkOrange}
+    \color{ScalaIO}
     \pgfline{\pgfpoint{0.8\paperwidth}{4.5mm}}{\pgfpoint{0.99\paperwidth}{4.5mm}}
   \end{pgfpicture}
   \begin{pgfpicture}{0mm}{0mm}{0mm}{0mm}
     \pgfsetlinewidth{0.5mm}
-    \color{DarkOrange}
+    \color{ScalaIO}
     \pgfline{\pgfpoint{0.985\paperwidth}{4.255mm}}{\pgfpoint{0.985\paperwidth}{0.1\paperwidth}}
   \end{pgfpicture}
 }
@@ -64,15 +63,15 @@
 \setbeamertemplate{navigation symbols}{}
 
 
-\setbeamercolor*{block title}{fg=white,bg=Zeus}
-\setbeamercolor*{block body}{bg=Zeus!20}
+\setbeamercolor*{block title}{fg=white,bg=black}
+\setbeamercolor*{block body}{bg=black!20}
 
-\setbeamercolor*{block title alerted}{use={normal text,alerted text},fg=black,bg=DarkOrange}
-\setbeamercolor*{block body alerted}{bg=Zeus,fg=Zeus!20}
+\setbeamercolor*{block title alerted}{use={normal text,alerted text},fg=black,bg=ScalaIO}
+\setbeamercolor*{block body alerted}{bg=black,fg=black!20}
 
-\setbeamercolor*{block title example}{fg=black,bg=DarkOrange!90}
-\setbeamercolor*{block body example}{bg=Zeus!20}
-\setbeamercolor*{example text}{fg=DarkOrange}
+\setbeamercolor*{block title example}{fg=black,bg=ScalaIO!90}
+\setbeamercolor*{block body example}{bg=black!20}
+\setbeamercolor*{example text}{fg=ScalaIO}
 
 \setbeamertemplate{mini frames}[box]
 \setbeamersize{mini frame size=3pt}
