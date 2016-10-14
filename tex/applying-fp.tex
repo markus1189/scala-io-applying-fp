@@ -118,7 +118,8 @@ java.lang.NumberFormatException: For input string: "Hello World"
 \begin{frame}
   \frametitle{Try and Catch: Not Compositonal}
   \begin{itemize}
-  \item problem is that \texttt{try}/\texttt{catch} is not compositional
+  \item problem is that \texttt{try}/\texttt{catch} does not compose
+    nicely (Duplo)
   \end{itemize}
 \end{frame}
 
@@ -148,6 +149,27 @@ java.lang.NumberFormatException: For input string: "Hello World"
   \item fail 3: no special chars
   \item raaaaage because of sequential errors
   \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Validation}
+  \begin{itemize}
+  \item scenario: multiple unrelated error conditions, result is
+    fail/success
+  \item \texttt{Either,Xor,etc.} are made for fail-fast, or
+    short circuiting
+  \item solution: \texttt{Validation/Validated}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Passwords with Validation}
+  \begin{itemize}
+  \item goal: present \textbf{all} errors at once
+  \end{itemize}
+\begin{minted}{scala}
+// example with validation
+\end{minted}
 \end{frame}
 
 \begin{frame}
