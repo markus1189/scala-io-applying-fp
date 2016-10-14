@@ -2,6 +2,11 @@
 
 \usepackage{minted}
 \usepackage{pgf}
+\usepackage[utf8]{inputenc}
+\usepackage{mdframed}
+
+\BeforeBeginEnvironment{minted}{\begin{mdframed}}
+\AfterEndEnvironment{minted}{\end{mdframed}}
 
 \title{Applying FP Patterns}
 \subtitle{Or: Why should I care about FP}
@@ -43,13 +48,19 @@
 
 \end{frame}
 
-\section{Error Handling}
-\label{sec:error-handling}
+\section{Exceptions \& Errors}
+\label{sec:exceptions-and-errors}
+
+\begin{frame}[c]
+  \begin{center}
+    Part 2: Dealing with Exceptions and Errors
+  \end{center}
+\end{frame}
 
 \begin{frame}
-  \frametitle{Traditional Way: Java}
+  \frametitle{The Traditional Way}
   \begin{itemize}
-  \item in Java: \texttt{try}/\texttt{catch}/\texttt{finally}
+  \item Java style: \texttt{try}/\texttt{catch}/\texttt{finally}
   \item \textit{checked} exceptions
     \begin{itemize}
     \item compiler help
@@ -60,27 +71,54 @@
     \item only visible via docs, if documented at all
     \item currently the only way to go in Java
     \end{itemize}
+  \item errors? return \texttt{null} / custom classes
   \end{itemize}
 \end{frame}
 
 \begin{frame}
-  \frametitle{From Java To Scala}
+  \frametitle{The Functional Way}
   \begin{itemize}
   \item Scala: only \textit{unchecked} exceptions
-  \item but: \texttt{throw} and \texttt{catch} discouraged in FP
-  \item throwing exceptions = effect $\rightarrow$ track via \textbf{types}
+  \item but: \texttt{throw} and \texttt{catch} discouraged in FP anyway
+  \item FP:\@ type system + first class values
   \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Standard Scala}
+  \frametitle{Out Of The Box}
   \begin{itemize}
-  \item Scala provides some means for this out of the box
   \item \texttt{Either} / \texttt{Try}
-  \item both have their share of problems
-  \item you don't want \texttt{Try}, though
-  \item nice: \texttt{Either} will be right-biased in 2.12
-  \item use FP library, cats, scalaz, \dots
+    \begin{itemize}
+    \item \texttt{Either} unbiased (before 2.12)
+    \item \texttt{Try} not a lawful monad\dots
+    \end{itemize}
+  \item get the most bang for your buck: use a FP library
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Try and Catch}
+\begin{minted}{scala}
+def convert(is: String*): List[Int] =
+  is.map(_.toInt).toList
+\end{minted}
+
+\begin{minted}{scala}
+convert("1","2","3","Hello World!","5")
+\end{minted}
+\begin{minted}[fontsize=\tiny]{text}
+java.lang.NumberFormatException: For input string: "Hello World"
+  at java.lang.NumberFormatException.forInputString(NumberFormatException.java:65)
+  at java.lang.Integer.parseInt(Integer.java:580)
+  at java.lang.Integer.parseInt(Integer.java:615)
+  ...
+\end{minted}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Try and Catch: Not Compositonal}
+  \begin{itemize}
+  \item problem is that \texttt{try}/\texttt{catch} is not compositional
   \end{itemize}
 \end{frame}
 
@@ -88,9 +126,9 @@
   \frametitle{Example Time}
   \begin{itemize}
   \item password validation
-  \item we require some constraints
+  \item constraints:
     \begin{itemize}
-    \item length >= 10
+    \item length $\geq$ 10
     \item contains at least one number
     \item contains at least one special char
     \end{itemize}
@@ -99,9 +137,6 @@
 
 \begin{frame}[fragile]
   \frametitle{Representing Errors (Java)}
-\begin{minted}{java}
-class 
-\end{minted}
 \end{frame}
 
 \begin{frame}
