@@ -28,8 +28,10 @@ let
     # kvoptions
     lineno
     listings
+    mdframed
     microtype
     minted
+    needspace
     pgf
 
     # pdftexcmds
