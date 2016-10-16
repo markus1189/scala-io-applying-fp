@@ -10,9 +10,9 @@ let
   ];
   tex = texlive.combine {
     inherit (texlive)
+    animate
     babel
     beamer
-    # calc
     chngcntr
     cleveref
     enumitem
@@ -21,20 +21,16 @@ let
     fancyvrb
     float
     framed
-    # fvextra
     ifplatform
-    # ifthen
-    # keyval
-    # kvoptions
     lineno
     listings
     mdframed
+    media9
     microtype
     minted
     needspace
+    ocgx2
     pgf
-
-    # pdftexcmds
     scheme-medium
     todonotes
     upquote

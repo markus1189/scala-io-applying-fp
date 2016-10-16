@@ -4,6 +4,9 @@
 \usepackage{pgf}
 \usepackage[utf8]{inputenc}
 \usepackage{mdframed}
+\usepackage{animate}
+\usepackage{media9}
+\usepackage{graphicx}
 
 \BeforeBeginEnvironment{minted}{\begin{mdframed}}
 \AfterEndEnvironment{minted}{\end{mdframed}}
@@ -45,7 +48,61 @@
 
 \begin{frame}
   \frametitle{Monoids}
+  \begin{itemize}
+  \item intuition: ``summon \& combine stuff''
+  \item you can create values from thin air
+  \item combine two values into one
+  \end{itemize}
+\end{frame}
 
+\begin{frame}
+  \frametitle{I thought this was about ``applying''}
+  \begin{itemize}
+  \item damn right, so let's do that!
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Apache Spark}
+  \begin{itemize}
+  \item Apache Spark:
+    \begin{itemize}
+    \item analysis of a text (huuuuge)
+    \item run in cluster
+    \end{itemize}
+  \item some possible metrics over text
+    \begin{itemize}
+    \item word count
+    \item char count
+    \item min/max word length
+    \item avg word length
+    \item \dots (be flexible)
+    \end{itemize}
+  \item \textbf{goal}: single traversal $\leftrightarrow$ easy composition
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Using Monoids}
+  \begin{itemize}
+  \item monoids are perfect for this
+  \item all we need from Spark is the \texttt{fold} function on \texttt{RDD}s
+  \end{itemize}
+\begin{minted}{scala}
+foo bar baz
+\end{minted}
+\end{frame}
+
+% IDEA: use the `animate' package to show animations
+
+\begin{frame}
+  \frametitle{More Monoid Tricks}
+  \begin{itemize}
+  \item ``filter'' values via \texttt{mempty} value
+  \item map + reduce == two phase computation via monoids
+  \item finger trees, implement multiple data structures using monoids
+  \item drawing diagrams (haskell)
+  \end{itemize}
 \end{frame}
 
 \section{Exceptions \& Errors}
