@@ -25,9 +25,9 @@
 \begin{frame}
   \frametitle{Introduction}
   \begin{itemize}
-  \item FP has become very popular
-  \item Even without complete commitment, useful patterns
-  \item Today we will have a look at one of them: Monoids
+  \item many new useful patterns in FP
+  \item today: Monoids
+  \item after enlightenment, apply this with Apache Spark
   \end{itemize}
 \end{frame}
 
@@ -46,6 +46,15 @@
   \item intuition: ``summon \& combine stuff''
   \item you can create values from thin air
   \item combine two values into one
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Monoid Laws}
+  \begin{itemize}
+  \item left identity
+  \item right identity
+  \item associative
   \end{itemize}
 \end{frame}
 
@@ -82,18 +91,15 @@
   \frametitle{RDDs and Folds}
 \begin{minted}{scala}
 abstract class RDD[T] {
-  /** Aggregate the elements of each partition,
-    * and then the results for all the partitions,
-    * using a given associative function and a
-    *  neutral "zero value".
-    */
+  /**
+   * Aggregate the elements of each partition,
+   * and then the results for all the partitions,
+   * using a given associative function and a
+   * neutral "zero value".
+   */
   def fold(zeroValue: T)(op: (T, T) => T): T
 }
 \end{minted}
-
-  \begin{itemize}
-  \item \textbf{associative} and \textbf{neutral value} --- rings a bell?
-  \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]
