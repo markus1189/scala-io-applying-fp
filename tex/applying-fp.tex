@@ -86,7 +86,7 @@ implicit val intPlus: Monoid[Int] = {
 \begin{frame}
   \frametitle{More Monoids}
   \begin{itemize}
-  \item Numeric types with addition / multiplication
+  \item Numeric types with addition / multiplication / min / max
   \item \texttt{List}/\texttt{Vector}/\texttt{Set}
   \item lots of others...
   \item more important: composes nicely like legos
@@ -168,18 +168,53 @@ implicit class MonoidRDD[T](val rdd: RDD[T])
 \end{minted}
 \end{frame}
 
-\begin{frame}[fragile]
-  \frametitle{Using Monoids}
-  \begin{itemize}
-  \item monoids are perfect for this
-  \item all we need from Spark is the \texttt{fold} function on \texttt{RDD}s
-  \end{itemize}
+\begin{frame}[fragile,fragile]
+  \frametitle{The Program}
 \begin{minted}{scala}
-foo bar baz
+val file = "/some/file.txt"
+val sc: SparkContext = new SparkContext(conf)
+val words = sc.textFile(file).flatMap(_.split("""\s+"""))
+val wordMonoids = words.map(expand)
+
+val z = Monoid.empty[(Option[Max[Int]],Option[Min[Int]],Int,Int)]
+
+def expand(word: String) = {
+  (Option(Max(word.length)), Option(Min(word.length)), word.length, 1)
+}
+
+val (max,min,chars,words) = wordMonoids.fold(z)(_ |+| _)
 \end{minted}
 \end{frame}
 
-% IDEA: use the `animate' package to show animations
+\begin{frame}[fragile]
+  \frametitle{Running this program}
+\begin{minted}{text}
+Scala.io - The Scala event in France
+\end{minted}
+
+\begin{minted}{scala}
+Seq("Scala.io","The","Scala","event","in","France")
+\end{minted}
+
+\begin{minted}{scala}
+Seq(
+  (Some(Max(8)),Some(Min(8)),8,1), // Scala.io
+  (Some(Max(3)),Some(Min(3)),3,1), // the
+  (Some(Max(6)),Some(Min(6)),6,1), // Scala
+  // ...
+)
+\end{minted}
+
+\begin{minted}{scala}
+(Some(Max(8)),Some(Min(3)),17,3)
+\end{minted}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Easy Extension}
+  
+\end{frame}
 
 \section{Almost Done}
 
