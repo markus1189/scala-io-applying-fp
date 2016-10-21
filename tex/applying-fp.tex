@@ -16,6 +16,8 @@
 
 \input{./beamer-setup}
 
+\renewcommand\texttt[1]{\mintinline{scala}/#1/}
+
 \begin{document}
 \frame{\titlepage}
 
@@ -43,28 +45,78 @@
 \begin{frame}
   \frametitle{Monoids}
   \begin{itemize}
-  \item intuition: ``summon \& combine stuff''
-  \item you can create values from thin air
-  \item combine two values into one
+  \item intuition: ``combine stuff''
+  \item you can create values from thin air via \texttt{Monoid.empty}
+  \item combine two values via \texttt{Monoid.combine} / \texttt{|+|}
   \end{itemize}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
   \frametitle{Monoid Laws}
+\begin{minted}{scala}
+// 1) left identity
+empty |+| x === x
+
+// 2) right identity
+x |+| empty === x
+
+// 3) associative
+x |+| (y |+| z) === (x |+| y) |+| z
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Monoid Typeclass}
+\begin{minted}{scala}
+trait Monoid[A] {
+  def empty: A
+  def combine(lhs: A, rhs: A): A
+}
+
+implicit val intPlus: Monoid[Int] = {
+  new Monoid[Int] {
+    def empty: Int = 0
+    def combine(lhs: Int, rhs: Int): Int =
+      lhs + rhs
+  }
+}
+\end{minted}
+\end{frame}
+
+\begin{frame}
+  \frametitle{More Monoids}
   \begin{itemize}
-  \item left identity
-  \item right identity
-  \item associative
+  \item Numeric types with addition / multiplication
+  \item \texttt{List}/\texttt{Vector}/\texttt{Set}
+  \item lots of others...
+  \item more important: composes nicely like legos
   \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile,fragile]
+  \frametitle{Monoids Compose (Lego Principle)}
+  \begin{tabular}{l l}
+    \texttt{Map[A,B]} & if \texttt{B} is a \texttt{Monoid} \\
+    \texttt{A => B} & if \texttt{B} is a \texttt{Monoid} \\
+    \texttt{Future[A]} & if \texttt{A} is a \texttt{Monoid} \\
+    \texttt{(A,B)} & if \texttt{A} \textbf{and} \texttt{B} are \texttt{Monoid}s \\
+    \texttt{A => Future[Map[K,(V1,V2)]]} & if ?
+  \end{tabular}
+
+\begin{minted}{scala}
+val m1 = Map("as" -> 21, "bs" -> 4)
+val m2 = Map("as" -> 21, "cs" -> 2)
+m1 |+| m2
+//  Map("as" -> 42, "bs" -> 4, "cs" -> 2)
+\end{minted}
 \end{frame}
 
 \section{Apache Spark}
 
 \begin{frame}
-  \frametitle{I thought this was about ``applying''}
-  \begin{itemize}
-  \item damn right, so let's do that!
-  \end{itemize}
+  \begin{center}
+    % \includegraphics[width=0.6\textwidth]{../images/futurama-fry.jpg}
+  \end{center}
 \end{frame}
 
 \begin{frame}
