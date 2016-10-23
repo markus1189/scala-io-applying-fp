@@ -121,21 +121,24 @@ implicit val intPlus: Monoid[Int] = {
   \frametitle{More Monoids}
   \begin{itemize}
   \item Numeric types with addition / multiplication / min / max
-  \item \texttt{List}/\texttt{Vector}/\texttt{Set}
+  \item \texttt{List} / \texttt{Vector} / \texttt{Set}
   \item lots of others...
   \item more important: composes nicely like legos
   \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile,fragile]
-  \frametitle{Monoids Compose (Lego Principle)}
-  \begin{tabular}{l l}
-    \texttt{Map[A,B]} & if \texttt{B} is a \texttt{Monoid} \\
-    \texttt{A => B} & if \texttt{B} is a \texttt{Monoid} \\
-    \texttt{Future[A]} & if \texttt{A} is a \texttt{Monoid} \\
-    \texttt{(A,B)} & if \texttt{A} \textbf{and} \texttt{B} are \texttt{Monoid}s
-  \end{tabular}
-
+  \frametitle{Let's Talk About Monoids}
+  \begin{center}
+    \begin{tabular}{l l}
+      \texttt{A => B} & if \texttt{B} is a \texttt{Monoid} \\
+      \texttt{(A,B)} & if \texttt{A} \textbf{and} \texttt{B} are \texttt{Monoid}s \\
+      \texttt{List[A]} & if \texttt{A} is a \texttt{Monoid} \\
+      \texttt{Future[A]} & if \texttt{A} is a \texttt{Monoid} \\
+      \texttt{Map[A,B]} & if \texttt{B} is a \texttt{Monoid}
+    \end{tabular}
+  \end{center}
+  \onslide<2->
 \begin{minted}{scala}
 val m1 = Map("as" -> 21, "bs" -> 4)
 val m2 = Map("as" -> 21, "cs" -> 2)
@@ -145,26 +148,30 @@ m1 |+| m2
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Composition Demo}
-  \onslide<1>
+  \frametitle{Monoids Compose (Lego Principle)}
+  \onslide<1->
 \begin{minted}{scala}
 Config => A
 \end{minted}
-  \onslide<2>
+  \onslide<2->
 \begin{minted}{scala}
 Config => Future[A]
 \end{minted}
-  \onslide<3>
+  \onslide<3->
 \begin{minted}{scala}
 Config => Future[Map[String,A]]
 \end{minted}
-  \onslide<4>
+  \onslide<4->
 \begin{minted}{scala}
 Config => Future[Map[String,(A,B)]]
 \end{minted}
-  \onslide<5>
+  \onslide<5->
 \begin{minted}{scala}
 Config => Future[Map[String,(A,Option[B])]]
+\end{minted}
+  \onslide<6->
+\begin{minted}{scala}
+Config => Future[Map[String,(Set[A],Option[B])]]
 \end{minted}
 \end{frame}
 
@@ -231,18 +238,19 @@ implicit class MonoidRDD[T](val rdd: RDD[T])
 \begin{frame}[fragile,fragile]
   \frametitle{The Program}
 \begin{minted}{scala}
-val file = "/some/file.txt"
-val sc: SparkContext = new SparkContext(conf)
-val words = sc.textFile(file).flatMap(_.split("""\s+"""))
-val wordMonoids = words.map(expand)
+val data = sc.textFile(file).
+  flatMap(_.split("""\s+""")).
+  map(expand)
 
-val z = Monoid.empty[(Option[Max[Int]],Option[Min[Int]],Int,Int)]
+val z = Monoid.empty[
+  (Option[Max[Int]],Option[Min[Int]],Int,Int)]
 
-def expand(word: String) = {
-  (Option(Max(word.length)), Option(Min(word.length)), word.length, 1)
+def expand(w: String) = {
+  (Option(Max(w.length)), Option(Min(w.length)),
+   w.length,              1
+  )
 }
-
-val (max,min,chars,words) = wordMonoids.fold(z)(_ |+| _)
+val (max,min,chars,words) = data.combine
 \end{minted}
 \end{frame}
 
