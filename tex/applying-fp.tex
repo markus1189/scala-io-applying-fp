@@ -37,7 +37,41 @@
 
 \begin{frame}
   \frametitle{Lego vs Duplo}
-  FP = Lego, OO = Duplo?
+  \begin{center}
+    \includegraphics[width=0.45\textwidth]{../images/duplo-construction.jpg}
+    \hspace{1mm}
+    \includegraphics[width=0.45\textwidth]{../images/duplo-airport.jpg}
+  \end{center}
+  \vfill
+  \begin{center}
+    {\tiny pictures from \url{shop.lego.com}}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Lego vs Duplo}
+  \begin{center}
+    \includegraphics[width=0.45\textwidth]{../images/lego-sydney-opera.jpg}
+    \includegraphics[width=0.45\textwidth]{../images/lego-tower-bridge.jpg}
+  \end{center}
+  \vfill
+  \begin{center}
+    {\tiny pictures from \url{shop.lego.com}}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Lego vs Duplo}
+  \begin{itemize}
+  \item Duplo favours specialized building blocks that do
+    \textbf{not} compose
+  \item therefore very limited reuse, blocks tend to be too big
+  \item Lego on the other side focuses on small composable building
+    blocks
+  \item blocks can conveniently be reused for other purposes
+  \item limited use of specialized building blocks
+  \item OO tends to be like Duplo, FP tends to be like Lego
+  \end{itemize}
 \end{frame}
 
 \section{Monoids}
@@ -99,8 +133,7 @@ implicit val intPlus: Monoid[Int] = {
     \texttt{Map[A,B]} & if \texttt{B} is a \texttt{Monoid} \\
     \texttt{A => B} & if \texttt{B} is a \texttt{Monoid} \\
     \texttt{Future[A]} & if \texttt{A} is a \texttt{Monoid} \\
-    \texttt{(A,B)} & if \texttt{A} \textbf{and} \texttt{B} are \texttt{Monoid}s \\
-    \texttt{A => Future[Map[K,(V1,V2)]]} & if ?
+    \texttt{(A,B)} & if \texttt{A} \textbf{and} \texttt{B} are \texttt{Monoid}s
   \end{tabular}
 
 \begin{minted}{scala}
@@ -111,11 +144,38 @@ m1 |+| m2
 \end{minted}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{Composition Demo}
+  \onslide<1>
+\begin{minted}{scala}
+Config => A
+\end{minted}
+  \onslide<2>
+\begin{minted}{scala}
+Config => Future[A]
+\end{minted}
+  \onslide<3>
+\begin{minted}{scala}
+Config => Future[Map[String,A]]
+\end{minted}
+  \onslide<4>
+\begin{minted}{scala}
+Config => Future[Map[String,(A,B)]]
+\end{minted}
+  \onslide<5>
+\begin{minted}{scala}
+Config => Future[Map[String,(A,Option[B])]]
+\end{minted}
+\end{frame}
+
 \section{Apache Spark}
 
 \begin{frame}
   \begin{center}
-    % \includegraphics[width=0.6\textwidth]{../images/futurama-fry.jpg}
+    \includegraphics[width=0.6\textwidth]{../images/disapproval.jpg}
+  \end{center}
+  \begin{center}
+    {\large I thought this was about \textbf{applying} patterns!}
   \end{center}
 \end{frame}
 
@@ -213,7 +273,7 @@ Seq(
 
 \begin{frame}
   \frametitle{Easy Extension}
-  
+
 \end{frame}
 
 \section{Almost Done}
