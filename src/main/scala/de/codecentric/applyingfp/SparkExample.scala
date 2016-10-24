@@ -46,29 +46,54 @@ trait SparkSugar {
   }
 }
 
-object SparkExample extends SparkSugar {
+object SparkExample1 extends SparkSugar {
   def main(args: Array[String]) = {
     val file = "/home/markus/repos/clones/stack/README.md" // Should be some file on your system
-    val conf = new SparkConf().
-      setJars(Seq("/home/markus/src/scala/spark-sandbox/target/scala-2.10/Spark-Sandbox-assembly-0.1-SNAPSHOT.jar")).
-      setMaster("spark://nixos:7077").setAppName("spark-cats")
+    val conf = new SparkConf().setMaster("spark://nixos:7077").setAppName("spark-monoids")
     val sc: SparkContext = new SparkContext(conf)
 
     def expand(word: String) = {
       (Option(Max(word.length)), Option(Min(word.length)), word.length, 1)
     }
 
-    val data = sc.textFile(file).flatMap(_.split("""\s+""")).map(expand)
+    val data = "Scala.io The Scala event in France".split("""\s+""")
+    val words = sc.parallelize(data).flatMap(_.split("""\s+""")).map(expand)
     val z = Monoid.empty[(Option[Max[Int]],Option[Min[Int]],Int,Int)]
 
-    val (max,min,chars,words) = data.combine
+    val (max,min,chars,ws) = words.combine
 
     println(s"""Finished calculation:
                |  - max word length: $max
                |  - min word length: $min
                |  - total characters: $chars
                |  - total words: $words
-               |  - average word length: ${chars/words}
+               |  - average word length: ${chars/ws}
+               |""".stripMargin)
+  }
+}
+
+object SparkExample2 extends SparkSugar {
+  def main(args: Array[String]) = {
+    val file = "/home/markus/repos/clones/stack/README.md" // Should be some file on your system
+    val conf = new SparkConf().setMaster("spark://nixos:7077").setAppName("spark-monoids")
+    val sc: SparkContext = new SparkContext(conf)
+
+    def expand(word: String) = {
+      (Option(Max(word.length)), Option(Min(word.length)), word.length, 1)
+    }
+
+    val data = "Scala.io The Scala event in France".split("""\s+""")
+    val words = sc.parallelize(data).flatMap(_.split("""\s+""")).map(expand)
+    val z = Monoid.empty[(Option[Max[Int]],Option[Min[Int]],Int,Int)]
+
+    val (max,min,chars,ws) = words.combine
+
+    println(s"""Finished calculation:
+               |  - max word length: $max
+               |  - min word length: $min
+               |  - total characters: $chars
+               |  - total words: $words
+               |  - average word length: ${chars/ws}
                |""".stripMargin)
   }
 }
