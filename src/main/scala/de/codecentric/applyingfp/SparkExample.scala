@@ -58,7 +58,6 @@ object SparkExample1 extends SparkSugar {
 
     val data = "Scala.io The Scala event in France".split("""\s+""")
     val words = sc.parallelize(data).flatMap(_.split("""\s+""")).map(expand)
-    val z = Monoid.empty[(Option[Max[Int]],Option[Min[Int]],Int,Int)]
 
     val (max,min,chars,ws) = words.combine
 
