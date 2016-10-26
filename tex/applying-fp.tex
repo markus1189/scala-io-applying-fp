@@ -9,7 +9,7 @@
 \AfterEndEnvironment{minted}{\end{mdframed}}
 
 \title{Applying \textbf{one} FP Pattern: Monoids}
-\subtitle{Original Title: Applying FP Patterns (sorry)}
+\subtitle{Original Title: Applying FP Patterns}
 \author{Markus Hauck}
 \date{Scala.IO, 2016}
 \subject{Computer Science}
@@ -105,14 +105,13 @@ x |+| (y |+| z) === (x |+| y) |+| z
 trait Monoid[A] {
   def empty: A
   def combine(lhs: A, rhs: A): A
+  // infix operator: |+|
 }
 
-implicit val intPlus: Monoid[Int] = {
-  new Monoid[Int] {
-    def empty: Int = 0
-    def combine(lhs: Int, rhs: Int): Int =
-      lhs + rhs
-  }
+implicit val plus: Monoid[Int] = new Monoid[Int] {
+  def empty: Int = 0
+  def combine(lhs: Int, rhs: Int): Int =
+    lhs + rhs
 }
 \end{minted}
 \end{frame}
@@ -120,25 +119,22 @@ implicit val intPlus: Monoid[Int] = {
 \begin{frame}
   \frametitle{More Monoids}
   \begin{itemize}
-  \item Numeric types with addition / multiplication / min / max
-  \item \texttt{List} / \texttt{Vector} / \texttt{Set}
-  \item lots of others...
-  \item more important: composes nicely like legos
+  \item \texttt{Monoid} instance not unique: addition / multiplication / min / max
+  \item most collections are \texttt{Monoid}s: \texttt{List} / \texttt{Vector} / \texttt{Set}
+  \item let's see some more examples
   \end{itemize}
 \end{frame}
 
 \begin{frame}[fragile,fragile]
-  \frametitle{Let's Talk About Monoids}
-  \begin{center}
-    \begin{tabular}{l l}
-      \texttt{A => B} & if \texttt{B} is a \texttt{Monoid} \\
-      \texttt{(A,B)} & if \texttt{A} \textbf{and} \texttt{B} are \texttt{Monoid}s \\
-      \texttt{List[A]} & if \texttt{A} is a \texttt{Monoid} \\
-      \texttt{Future[A]} & if \texttt{A} is a \texttt{Monoid} \\
-      \texttt{Map[A,B]} & if \texttt{B} is a \texttt{Monoid}
-    \end{tabular}
-  \end{center}
-  \onslide<2->
+  \frametitle{Monoid Zoo}
+  \begin{tabular}{p{5cm} l}
+    \texttt{A => B} & if \texttt{B} is a \texttt{Monoid} \\
+    \only<2->{\texttt{(A,B)} & if \texttt{A} \textbf{and} \texttt{B} are \texttt{Monoid}s \\}
+    \only<3->{\texttt{List[A]} & if \texttt{A} is a \texttt{Monoid} \\}
+    \only<4->{\texttt{Future[A]} & if \texttt{A} is a \texttt{Monoid} \\}
+    \only<5->{\texttt{Map[A,B]} & if \texttt{B} is a \texttt{Monoid}}
+  \end{tabular}
+  \onslide<6->
 \begin{minted}{scala}
 val m1 = Map("as" -> 21, "bs" -> 4)
 val m2 = Map("as" -> 21, "cs" -> 2)
@@ -187,14 +183,13 @@ Config => Future[Map[String,(Set[A],Option[B])]]
 \end{frame}
 
 \begin{frame}
-  \frametitle{Apache Spark}
+  \begin{center}
+    \includegraphics[width=0.3\textwidth]{../images/spark-logo-trademark.png}
+  \end{center}
+
   \begin{itemize}
-  \item Apache Spark:
-    \begin{itemize}
-    \item analysis of a text (huuuuge)
-    \item run in cluster
-    \end{itemize}
-  \item some possible metrics over text
+  \item analysis of a potentially huge text
+  \item calculate metrics over text
     \begin{itemize}
     \item word count
     \item char count
@@ -224,8 +219,7 @@ abstract class RDD[T] {
 \begin{frame}[fragile]
   \frametitle{Monoidal RDDs}
 \begin{minted}{scala}
-implicit class MonoidRDD[T](val rdd: RDD[T])
-  extends AnyVal {
+implicit class MonoidRDD[T](val rdd: RDD[T]) {
 
   // avoid conflicts with fold/reduce etc
   def combine(implicit M: Monoid[T]): T =
@@ -238,50 +232,84 @@ implicit class MonoidRDD[T](val rdd: RDD[T])
 \begin{frame}[fragile,fragile]
   \frametitle{The Program}
 \begin{minted}{scala}
+val sc: SparkContext = ???
+val file: String = ???
+
 val data = sc.textFile(file).
-  flatMap(_.split("""\s+""")).
+  flatMap(_.split("""\W+""")).
   map(expand)
 
-val z = Monoid.empty[
-  (Option[Max[Int]],Option[Min[Int]],Int,Int)]
+def expand(w: String) = (1, w.length, Map(w -> 1))
 
-def expand(w: String) = {
-  (Option(Max(w.length)), Option(Min(w.length)),
-   w.length,              1
-  )
-}
-val (max,min,chars,words) = data.combine
+val (words,chars,wordMap) = data.combine
 \end{minted}
 \end{frame}
 
 \begin{frame}[fragile]
   \frametitle{Running this program}
 \begin{minted}{text}
-Scala.io - The Scala event in France
+Scala.io The Scala event in France
 \end{minted}
-
+  \onslide<2->
 \begin{minted}{scala}
-Seq("Scala.io","The","Scala","event","in","France")
+Seq("Scala","io","The","Scala","event","in",...)
 \end{minted}
-
+  \onslide<3->
 \begin{minted}{scala}
 Seq(
-  (Some(Max(8)),Some(Min(8)),8,1), // Scala.io
-  (Some(Max(3)),Some(Min(3)),3,1), // the
-  (Some(Max(6)),Some(Min(6)),6,1), // Scala
+  (1, 5, Map("Scala" -> 1)),
+  (1, 2, Map("io" -> 1)),
+  (1, 3, Map("The" -> 1)),
+  (1, 5, Map("Scala" -> 1)),
   // ...
 )
 \end{minted}
-
+  \onslide<4->
 \begin{minted}{scala}
-(Some(Max(8)),Some(Min(3)),17,3)
+(6,29,Map("Scala" -> 2,"io" -> 1,"The" -> 1,...))
 \end{minted}
-
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
   \frametitle{Easy Extension}
+\begin{minted}{scala}
+val data: RDD[String] = ??? // as before
 
+def expand(w: String) = (
+  1,
+  w.length,
+  Map(w -> 1),
+  Max(w.length),           // max word length
+  Min(w.length),           // min word length
+  Map(w.length -> Set(w))) // words by count
+
+val (words,chars,wordMap) = data.combine
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{The new program}
+\begin{minted}{text}
+Scala.io The Scala event in France
+\end{minted}
+  \onslide<2->
+\begin{minted}{scala}
+Seq("Scala","io","The","Scala","event","in",...)
+\end{minted}
+  \onslide<3->
+\begin{minted}{scala}
+Seq(
+  (1, 5, Map("Scala" -> 1)),
+  (1, 2, Map("io" -> 1)),
+  (1, 3, Map("The" -> 1)),
+  (1, 5, Map("Scala" -> 1)),
+  // ...
+)
+\end{minted}
+  \onslide<4->
+\begin{minted}{scala}
+(6,29,Map("Scala" -> 2,"io" -> 1,"The" -> 1,...))
+\end{minted}
 \end{frame}
 
 \section{Almost Done}
@@ -294,6 +322,12 @@ Seq(
   \item finger trees, implement multiple data structures using monoids
   \item drawing diagrams (haskell)
   \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \begin{center}
+    \includegraphics[height=2cm]{../images/duplo-logo} \hspace{2cm} \includegraphics[height=2cm]{../images/lego-logo}.
+  \end{center}
 \end{frame}
 
 \end{document}
