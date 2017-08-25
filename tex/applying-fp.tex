@@ -9,13 +9,15 @@
 \AfterEndEnvironment{minted}{\end{mdframed}}
 
 \title{Applying FP Patterns}
-\author{Markus Hauck}
-\date{Scala.IO, 2016}
-\subject{Computer Science}
+\author{Markus Hauck (@markus1189)}
 
-\input{./beamer-setup}
+\date{Scala Enthusiasts Rhein Main, 2017}
+\subject{Computer Science}
+\usetheme{codecentric}
 
 \renewcommand\texttt[1]{\mintinline{scala}/#1/}
+
+\usemintedstyle{fruity}
 
 \begin{document}
 \frame{\titlepage}
@@ -28,8 +30,10 @@
   \begin{itemize}
   \item FP becomes more popular
   \item there are many useful patterns
-  \item for example \textbf{Monoids}
-  \item apply this with Apache Spark
+    \begin{itemize}
+    \item Monoids
+    \item Better Error Handling
+    \end{itemize}
   \end{itemize}
 \end{frame}
 
@@ -38,9 +42,9 @@
 \begin{frame}
   \frametitle{Lego vs Duplo}
   \begin{center}
-    \includegraphics[width=0.45\textwidth]{../images/duplo-construction.jpg}
+    \includegraphics[width=0.48\textwidth]{../images/duplo-construction.jpg}
     \hspace{1mm}
-    \includegraphics[width=0.45\textwidth]{../images/duplo-airport.jpg}
+    \includegraphics[width=0.48\textwidth]{../images/duplo-airport.jpg}
   \end{center}
   \vfill
   \begin{center}
@@ -51,8 +55,8 @@
 \begin{frame}
   \frametitle{Lego vs Duplo}
   \begin{center}
-    \includegraphics[width=0.45\textwidth]{../images/lego-sydney-opera.jpg}
-    \includegraphics[width=0.45\textwidth]{../images/lego-tower-bridge.jpg}
+    \includegraphics[width=0.49\textwidth]{../images/lego-sydney-opera.jpg}
+    \includegraphics[width=0.49\textwidth]{../images/lego-tower-bridge.jpg}
   \end{center}
   \vfill
   \begin{center}
@@ -68,7 +72,7 @@
     \item<1-> blocks tend to be too big
     \item<1-> limited reuse
     \end{itemize}
-  \item<2-> \textbf{Lego} focuses on small composable building
+  \item<2-> \textbf{Lego} focuses on small composable building blocks
     \begin{itemize}
     \item<2-> blocks can conveniently be reused for other purposes
     \item<2-> limited use of specialized building blocks
@@ -157,9 +161,9 @@ object Monoid {
 \begin{frame}[fragile,fragile]
   \frametitle{Monoid Zoo}
   \begin{tabular}{p{5cm} l}
-    \only<3->{\texttt{List[A]} & is a \texttt{Monoid} \\}
-    \texttt{A => B} & if \texttt{B} is a \texttt{Monoid} \\
-    \only<2->{\texttt{(A,B)} & if \texttt{A} \textbf{and} \texttt{B} are \texttt{Monoid}s \\}
+    \only<1->{\texttt{List[A]} & is a \texttt{Monoid} \\}
+    \only<2->{\texttt{A => B} & if \texttt{B} is a \texttt{Monoid} \\}
+    \only<3->{\texttt{(A,B)} & if \texttt{A} \textbf{and} \texttt{B} are \texttt{Monoid}s \\}
     \only<4->{\texttt{Future[A]} & if \texttt{A} is a \texttt{Monoid} \\}
     \only<5->{\texttt{Map[A,B]} & if \texttt{B} is a \texttt{Monoid}}
   \end{tabular}
@@ -275,25 +279,25 @@ val (words,chars,wordMap) = data.combine
 \begin{frame}[fragile]
   \frametitle{Running this program}
 \begin{minted}{text}
-Scala.io The Scala event in France
+Scala Meetup: Rhein-Main Scala Enthusiasts
 \end{minted}
   \onslide<2->
 \begin{minted}{scala}
-Seq("Scala","io","The","Scala","event","in",...)
+Seq("Scala","Meetup","Rhein","Main","Scala", ...)
 \end{minted}
   \onslide<3->
 \begin{minted}{scala}
 Seq( // expand(w: String) = (1,w.length,Map(w->1))
   (1, 5, Map("Scala" -> 1)),
-  (1, 2, Map("io" -> 1)),
-  (1, 3, Map("The" -> 1)),
-  (1, 5, Map("Scala" -> 1)),
+  (1, 6, Map("Meetup" -> 1)),
+  (1, 5, Map("Rhein" -> 1)),
+  (1, 4, Map("Main" -> 1)),
   // ...
 )
 \end{minted}
   \onslide<4->
 \begin{minted}{scala}
-(7,28,Map("Scala" -> 2,"io" -> 1,"The" -> 1,...))
+(6,36,Map("Scala" -> 2,"Meetup" -> 1,"Rhein" -> 1,...))
 \end{minted}
 \end{frame}
 
@@ -315,26 +319,26 @@ val (count,max,min,byCount) = data.combine
 \begin{frame}[fragile]
   \frametitle{The new program}
 \begin{minted}{text}
-Scala.io The Scala event in France
+Scala Meetup: Rhein-Main Scala Enthusiasts
 \end{minted}
   \onslide<2->
 \begin{minted}{scala}
-Seq("Scala","io","The","Scala","event","in",...)
+Seq("Scala","Meetup","Rhein","Main","Scala", ...)
 \end{minted}
   \onslide<3->
 \begin{minted}{scala}
 Seq(
   (1, Max(5), Min(5), Map(5 -> Set("Scala"))),
-  (1, Max(2), Min(2), Map(2 -> Set("io"))),
-  (1, Max(3), Min(3), Map(3 -> Set("The"))),
+  (1, Max(6), Min(6), Map(6 -> Set("Meetup"))),
+  (1, Max(5), Min(5), Map(5 -> Set("Rhein"))),
+  (1, Max(4), Min(4), Map(4 -> Set("Main"))),
   (1, Max(5), Min(5), Map(5 -> Set("Scala"))),
-  (1, Max(5), Min(5), Map(5 -> Set("event"))),
   // ...
 )
 \end{minted}
   \onslide<4->
 \begin{minted}{scala}
-(7,Max(6),Min(2),Map(5->Set("Scala","event"),...))
+(6,Max(11),Min(4),Map(5->Set("Scala","Rhein"),...))
 \end{minted}
 \end{frame}
 
@@ -343,8 +347,8 @@ Seq(
   \begin{itemize}
   \item ``filter'' values via \texttt{mempty} value
   \item map + reduce == two phase computation via monoids
-  \item finger trees, implement multiple data structures using monoids
-  \item drawing diagrams (haskell)
+  \item finger trees, choose Monoid, get random access list / queue / \dots
+  \item Monoids Theme and Variations (Functional Pearl)
   \end{itemize}
 \end{frame}
 
@@ -369,7 +373,7 @@ Seq(
   \item \textit{unchecked} exceptions
     \begin{itemize}
     \item only visible via docs, if documented at all
-    \item currently the only way to go in Java
+    \item the ``way to go'' in Java?
     \end{itemize}
   \item errors? return \texttt{null} / custom classes
   \end{itemize}
@@ -425,7 +429,9 @@ try {
 }
 \end{minted}
   \begin{itemize}
-  \item this is all or nothing
+  \item type says nothing about errors
+  \item only one option: fail fast
+  \item what about getting \textit{all} errors or non-fatal warnings
   \item problem is that \texttt{try}/\texttt{catch} does not compose
     (Duplo)
   \end{itemize}
@@ -454,14 +460,15 @@ case object PwContainsSpace extends LoginError
 
 def checkLength(s: String): Option[LoginError]
 def checkSpace(s: String): Option[LoginError]
+def convert[E](o: Option[E]): Either[E, Unit]
 
-def convert[E](o: Option[E]): Xor[E, Unit]
-def login(s: String): Xor[LoginError,Token] = for {
-  _ <- convert(checkLength(input), ())
-  _ <- convert(checkSpace(input), ())
-  // ...
-  token = createToken()
-} yield token
+def login(s: String): Either[LoginError,Token] = 
+  for {
+    _ <- convert(checkLength(input))
+    _ <- convert(checkSpace(input))
+    // ...
+    token = createToken()
+  } yield token
 \end{minted}
 \end{frame}
 
@@ -562,11 +569,12 @@ contains no digit and no special character
 \end{frame}
 
 \begin{frame}
-  \frametitle{Even More}
+  \frametitle{First Class Errors}
   \begin{itemize}
+  \item replace \texttt{try} / \texttt{catch} with first class values
   \item \texttt{Either} / \texttt{Xor} and friends = fail-fast
   \item \texttt{Validated / }\texttt{Validation} = multiple \textbf{independent} errors
-  \item \texttt{Ior} = no fail/succeed $\rightarrow$ fail/succeed/succeed with warnings
+  \item \texttt{Ior} = fail/succeed/succeed with warnings
   \end{itemize}
 \end{frame}
 
