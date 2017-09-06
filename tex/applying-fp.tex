@@ -32,8 +32,9 @@
 \begin{frame}
   \frametitle{Introduction}
   \begin{itemize}
-  \item FP becomes more popular
-  \item there are many useful patterns
+  \item FP becomes more popular (finally!)
+  \item Time to have a look
+  \item There are many useful patterns
     \begin{itemize}
     \item Monoids
     \item Better Error Handling
@@ -388,7 +389,17 @@ Seq(
   \begin{itemize}
   \item Scala: only \textit{unchecked} exceptions
   \item but: \texttt{throw} and \texttt{catch} discouraged in FP anyway
-  \item FP:\@ type system + first class values
+  \item FP:\@ type system + first class values = referential transparency!
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Referential Transparency}
+  \begin{itemize}
+  \item referential transparency (sounds scary?)
+  \item enables you to replace \texttt{40 + 2} with \texttt{42}
+  \item local reasoning \& equational reasoning $\heartsuit{}$
+  \item parts can be reused independently like \textbf{lego} bricks
   \end{itemize}
 \end{frame}
 
