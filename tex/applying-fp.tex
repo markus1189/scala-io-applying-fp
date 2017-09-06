@@ -8,7 +8,7 @@
 \BeforeBeginEnvironment{minted}{\begin{mdframed}}
 \AfterEndEnvironment{minted}{\end{mdframed}}
 
-\title{Getting started with FP}
+\title{Functional Programming Awesomeness}
 \author{Markus Hauck (@markus1189)}
 
 \date{Scala Enthusiasts Rhein Main, 2017}
@@ -20,7 +20,11 @@
 \usemintedstyle{fruity}
 
 \begin{document}
-\frame{\titlepage}
+
+{
+  \usebackgroundtemplate{\includegraphics[height=\paperheight]{background.jpg}}
+  \frame[plain]{\titlepage}
+}
 
 \section{Intro}
 \label{sec:intro}
@@ -209,7 +213,7 @@ Config => Future[Map[String,(Set[A],Option[B])]]
     \includegraphics[width=0.6\textwidth]{../images/disapproval.jpg}
   \end{center}
   \begin{center}
-    {\large I thought this was about \textbf{applying} patterns!}
+    {\large Lot's of theory \ldots}
   \end{center}
 \end{frame}
 
